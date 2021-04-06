@@ -1,0 +1,93 @@
+@charset "UTF-8";
+@font-face { 
+   font-family: 'MapoPeacefull';
+   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoPeacefullA.woff') format('woff');
+   font-weight: normal;
+   font-style: normal;
+}
+body{
+   font-family: 'MapoPeacefull';
+}   
+   
+#title {
+	color:rgb(74,188,184);
+	font-weight:bold;
+	font-size:3rem;
+}
+#logo_col {
+	text-align:center;
+}
+#logo_col:hover {
+	cursor:pointer;
+}
+#registration_container {
+	height:718px;
+	margin:0px;
+	padding-top:100px;
+}
+#registration_row {
+	height:60%;
+}
+#registration_form {
+	position:inline-block;
+	margin-top:10%;
+
+}
+.registration_input {
+	width: 45%;
+    height: 50px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #e6e6e6;
+    padding-left: 15px;
+}
+.registration_input:hover {
+	border:1px solid #e6e6e6;
+	background-color: #e6e6e6;
+	cursor:pointer;
+}
+hr {
+	width:45%;
+	margin-bottom:2rem;
+}
+#registration_button {
+	width:45%;
+	height:50px;
+	border:1px solid #e6e6e6;
+	border-radius:5px;
+	background-color:#e6e6e6;
+	margin:auto;
+}
+#registration_button:hover {
+	background-color: rgb(74,188,184);
+	border:1px solid rgb(74,188,184);
+	color:white;
+	cursor:pointer;
+}
+
+#regstration_wrap {
+	text-align:center;
+}
+#bottom_col {
+	text-align:center;
+	margin-top:30px;
+}
+.check_registration {
+	text-align:left;
+	font-size:x-small;
+	margin-top:3px;
+	padding-left:28%;
+}
+#email {
+	width:85%;
+	margin-top:10px;
+}
+.btn {
+	margin-left:10px;
+	height:50px;
+}
+
+
+
+

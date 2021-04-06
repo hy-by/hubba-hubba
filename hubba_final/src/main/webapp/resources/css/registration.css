@@ -1,0 +1,77 @@
+@charset "UTF-8";
+@font-face { 
+   font-family: 'MapoPeacefull';
+   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoPeacefullA.woff') format('woff');
+   font-weight: normal;
+   font-style: normal;
+}
+body{
+   font-family: 'MapoPeacefull';
+}   
+   
+#title {
+	margin:80px 0px 50px 0px;
+	color:rgb(74,188,184);
+	font-weight:bold;
+	font-size:3rem;
+}
+#logo_col {
+	text-align:center;
+}
+#logo_col:hover {
+	cursor:pointer;
+}
+
+#registration_container {
+	height:718px;
+	margin:0px;
+	margin-bottom:-10%; /* 하단 footer 위치 조정 */
+}
+#registration_row {
+	height:50%;
+}
+
+#registration_form {
+	margin-left:100px;
+}
+
+.logo_icon {
+	margin:5px;
+	width:40px;
+	height:40px;
+}
+#googlelogo_wrap {
+	width:75%;
+	height:52px;
+	border:1px solid black;
+	position:inline-block;
+	margin-top:100px;
+	border-radius:5px;
+	position:relative;
+}
+#kakaologo_wrap, #naverlogo_wrap, #normallogo_wrap{
+	width:75%;
+	height:52px;
+	border:1px solid black;
+	margin-top:20px;
+	border-radius:5px;
+	position:relative;
+}
+
+#google_ptag, #kakao_ptag, #naver_ptag, #hubba_ptag {
+	position:absolute;
+	top:12px;
+	left:30%;
+}
+#googlelogo_wrap:hover, #kakaologo_wrap:hover, #naverlogo_wrap:hover, #normallogo_wrap:hover {
+	border:#e6e6e6;
+	background-color:#e6e6e6;
+	cursor:pointer;
+}
+#bottom_col {
+	text-align:center;
+	margin-top:40px;
+}
+
+
+
