@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.hubba.mapper.ReviewMapper">
+
+	<select id="myReviewList" resultType="com.hubba.vo.ReviewVO">
+		select * from review where user_idx=#{user_idx} order by idx desc
+	</select>
+	
+	<delete id="deleteMyReview">
+		delete from review where idx=#{idx}
+	</delete>
+	
+	<select id="categoryBAL" resultType="String">
+		select images from review where business_idx=#{business_idx} order by idx desc limit 1;
+	</select>
+	
+	
+
+	<!--   도연추가 -->
+	<insert id="InsertReview"> 
+		insert into review (user_idx, business_idx, rating,likes,content,images) values (2,10,"3.8",0,"정말 맛있어요~",#{images}); 
+	</insert>
+	<select id="getImages" resultType="String">
+		select images from review where business_idx=#{idx} and images <![CDATA[ <> ]]> 'null' ORDER BY RAND() LIMIT 1;
+	</select>
+	<select id="selectallimages" resultType="String"> select images from review where business_idx=#{idx} and review.images <![CDATA[ <> ]]>'null' order by idx desc;</select>
+
+	
+	
+	
+	<!-- 새봄추가 -->
+	<select id="selectAllReview" resultType="com.hubba.vo.ReviewVO">
+	select * from review INNER JOIN users on review.user_idx=users.idx where business_idx = #{business_idx} order by date desc
+	</select>
+	<!-- 상세페이지 평균 별점 -->
+	<select id="averageReview" resultType="double">
+		select AVG(rating) from review where business_idx = #{business_idx}
+	</select>
+	<!-- 리뷰 입력하기(user_idx는 session으로 , business_idx는 parameter로 받아와야함 -->
+	<insert id="insertReview">
+		insert into review(user_idx, business_idx, rating, content, images) values(#{user_idx}, #{business_idx}, #{rating}, #{content}, #{images})
+	</insert>
+	<select id="countAllReview" resultType="Integer">
+		select count(*) from review where business_idx=#{business_idx}
+	</select>
+	<update id="updateLikes">
+      update review set total_likes=#{total_likes} where business_idx=#{business_idx} and idx=#{idx}
+   </update>
+   <select id="newReview" resultType="com.hubba.vo.ReviewVO">
+	select * from review INNER JOIN users on review.user_idx=users.idx inner join business on review.business_idx=business.idx where review.images <![CDATA[ <> ]]> 'null' order by date desc;
+   </select>
+   
+   
+</mapper>

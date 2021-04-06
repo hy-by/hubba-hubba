@@ -1,0 +1,41 @@
+@charset "UTF-8";
+@font-face { 
+   font-family: 'MapoPeacefull';
+   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoPeacefullA.woff') format('woff');
+   font-weight: normal;
+   font-style: normal;
+}
+body{
+   font-family: 'MapoPeacefull';
+}   
+   
+#title {
+	color:rgb(74,188,184);
+	font-weight:bold;
+	font-size:3rem;
+}
+
+#logo_col {
+	text-align:center;
+}
+#logo_col:hover {
+	cursor:pointer;
+}
+
+#login_container {
+	height:718px;
+	margin:0px;
+	padding-top:100px;
+	margin-bottom:-10%;
+}
+#email_wrap {
+	margin-top:150px;
+}
+button {
+	width:100%;
+	height:50px;
+}
+#email_certify {
+	height:50px;
+	padding-left:15px;
+}

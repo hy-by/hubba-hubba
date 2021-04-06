@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/hubba?serverTimezone=UTC"/>
+		<property name="username" value="root"/>
+		<property name="password" value="qwerty12345!"/>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml"/>
+	</bean>
+	
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+		
+	<bean id="BookmarkBean" class="com.hubba.dao.BookmarkDAOImpl"/>
+ 	<bean id="BusinessBean" class="com.hubba.dao.BusinessDAOImpl"/> 
+	<bean id="HoursBean" class="com.hubba.dao.HoursDAOImpl"/>
+	<bean id="MenuBean" class="com.hubba.dao.MenuDAOImpl"/>
+    <bean id="AmenityBean" class="com.hubba.dao.AmenityDAOImpl"/>
+    <bean id="ReviewBean" class="com.hubba.dao.ReviewDAOImpl"/>
+    <bean id="UsersBean" class="com.hubba.dao.UsersDAOImpl"/>
+    <bean id="LikesBean" class="com.hubba.dao.LikesDAOImpl"/>
+    
+    
+    
+	<context:component-scan base-package="com.hubba.service" />
+
+	<bean name="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="30485760" />
+	</bean>
+	
+	<!-- 민희 추가 -->
+	<!-- Gmail -->
+	  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	    <property name="host" value="smtp.gmail.com" />
+	    <property name="port" value="587" />
+	    <property name="username" value="mh2232111@gmail.com" />
+	    <property name="password" value="akwlakrdlek66" />
+	    <property name="javaMailProperties">
+	    <props>
+	      <prop key="mail.smtp.auth">true</prop>
+	      <prop key="mail.smtp.starttls.enable">true</prop>
+	    </props>
+	   </property>
+	  </bean>
+	  
+	  <!-- SNS로그인 -->
+    <bean id="NaverLoginBean" class="com.hubba.Login.NaverLoginService"/>
+    <bean id="KakaoLoginBean" class="com.hubba.Login.KakaoLoginService"/>
+    
+	<!-- google Class Bean설정 추가 -->
+	  <!-- 클라이언트ID와 보안비밀 세팅 -->
+	  <bean id="googleConnectionFactory" class="org.springframework.social.google.connect.GoogleConnectionFactory">
+	    <constructor-arg value="955182690233-h9rmqlfpehu6tp43os5hhfbgcfn3su3k.apps.googleusercontent.com" />
+	    <constructor-arg value="yKKKbeJ0BbIQ0jyZCckjX_zK" />
+	  </bean>
+	
+	  <!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
+	  <bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+	    <property name="scope" value="https://www.googleapis.com/auth/plus.login" />
+	    <property name="redirectUri" value="http://localhost:8182/web/callback_google" />
+	  </bean>
+	  <!-- google Class Bean설정 추가 -->
+
+		
+		<!-- 새봄 추가 -->
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+
+
+</beans>

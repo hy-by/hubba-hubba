@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.hubba.mapper.UsersMapper">
+
+	<!-- 민희 추가 -->
+	<!-- id 중복체크 -->
+	<select id="idCheck" resultType="Integer">
+		select count(*) from users where id=#{id}
+	</select> 
+	
+	<!-- email 중복체크 -->
+	<select id="emailCheck" resultType="Integer">
+		select count(*) from users where email=#{email}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertUsers">
+		insert into users(id,pw,name,email) values(#{id},#{pw},#{name},#{email})
+	</insert>
+	
+	<insert id="insertSnsUsers">
+		insert into users(id,email,profile_img) values(#{id},#{email},#{profile_img})
+	</insert>
+
+	<select id="pwCheck" resultType="com.hubba.vo.UsersVO">
+		select * from users where id=#{id}
+	</select>
+	
+	<select id="countFindId" resultType="Integer">
+		select count(*) from users where name=#{name} and email=#{email}
+	</select>
+	
+	<select id="findId" resultType="String">
+		select id from users where name=#{name} and email=#{email}
+	</select>
+	
+	<select id="countFindPw" resultType="Integer">
+		select count(*) from users where id=#{id} and name=#{name} and email=#{email}
+	</select>
+	
+	<update id="updatePw">
+		update users set pw=#{pw} where email=#{email}
+	</update>
+	
+	<update id="updateUsers">
+		update users set pw=#{pw}, name=#{name}, profile_img=#{profile_img} where id=#{id}
+	</update>
+	
+	<select id="userIdx" resultType="Integer">
+		select idx from users where	id=#{id} and email=#{email}
+	</select>
+	
+	<select id="userNameCompare" resultType="String">
+		select name from users where id=#{id} and email=#{email}
+	</select>
+	
+	<update id="updateSnsUsers">
+		update users set profile_img=#{profile_img} where id=#{id} and name=#{name}
+	</update>
+
+
+
+
+	<!-- 새봄추가 -->
+	
+	<select resultType="com.hubba.vo.UsersVO" id="selectAll">
+		select * from users where idx=#{idx} 
+	</select>
+	
+
+
+</mapper>

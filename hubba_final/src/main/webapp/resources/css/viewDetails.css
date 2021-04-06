@@ -1,0 +1,368 @@
+@charset "UTF-8";
+
+@font-face { 
+   font-family: 'MapoPeacefull';
+   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoPeacefullA.woff') format('woff');
+   font-weight: normal;
+   font-style: normal;
+}
+body{
+   font-family: 'MapoPeacefull';
+}   
+
+   
+
+/* 이미지  */
+#category_img {
+	width:100%;
+}
+
+
+
+/* header */
+#login_container {
+   margin-bottom:-10%;
+}
+#title {
+   margin:60px 0px;
+   color:rgb(74,188,184);
+   font-weight:bold;
+   font-size:3rem;
+}
+#logo_col {
+   text-align:center;
+}
+#logo_col:hover {
+   cursor:pointer;
+}
+
+
+/* 오른쪽 상단 로그인 버튼 & 토글 */
+/* 헤더 로그인 토글 */
+#toggle {
+   position:absolute;
+   z-index:99;
+  display: block;
+  width: 28px;
+  height: 30px;
+  margin-top:19%;
+  margin-left:24%;
+}
+
+
+#toggle span:after,
+#toggle span:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -9px;
+
+}
+#toggle span:after{
+  top: 9px;
+}
+#toggle span {
+  position: relative;
+  display: block;
+}
+
+#toggle span,
+#toggle span:after,
+#toggle span:before {
+  width: 100%;
+  height: 5px;
+  background-color: rgb(74,188,184);
+  transition: all 0.3s;
+  backface-visibility: hidden;
+  border-radius: 2px;
+}
+
+/* on activation */
+#toggle.on span {
+  background-color: transparent;
+}
+#toggle.on span:before {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+#toggle.on span:after {
+  transform: rotate(-45deg) translate(7px, -8px);
+}
+#toggle.on + #menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* menu appearance*/
+#menu {
+   z-index:99;
+  position:relative;
+  color: #999;
+  width: 44%;
+  padding: 2%;
+  margin-left:13%;
+  margin: auto;
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+  text-align: center;
+  border-radius: 4px;
+  background: white;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .4s;
+  margin-top:14%;
+}
+#menu:after {
+  position: absolute;
+  top: -15px;
+  left: 95px;
+  content: "";
+  display: block;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid white;
+}
+ul, li, li a {
+   font-size:large;
+  list-style: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+li a {
+  padding: 5px;
+  color: #888;
+  text-decoration: none;
+  transition: all .2s;
+}
+li a:hover,
+li a:focus {
+  background: #1ABC9C;
+  color: #fff;
+}
+
+
+/* demo styles 
+body { margin-top: 3em; background: #eee; color: #555; font-family: "Open Sans", "Segoe UI", Helvetica, Arial, sans-serif; }
+p, p a { font-size: 12px;text-align: center; color: #888; }
+*/
+#logo {
+   font-family: 'Courgette', cursive;   
+}
+@media screen and (max-width: 768px) { 
+   #search_wrap {
+      text-align:center;
+   }
+   #search_left { 
+      margin-left:5%;
+      display:flex;
+      width:80%;
+   } 
+   #search_right {
+      display:left;
+      width:80%;
+   }   
+   #search_button {
+      display:left;
+   }   
+}
+.box {
+    width: 70px;
+    height: 70px; 
+    border-radius: 70%;
+    overflow: hidden;
+    margin: 5% auto 5%;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* 정보 */
+#information_row {
+	height:100%;
+	/* border:5px solid yellow; */
+}
+#view_name {
+	margin:10px 0px 30px 0px;
+}
+.view_img {
+	width:40px;
+}
+.view_ptag {
+	margin:0px;
+}
+
+/* 메뉴  */
+#menu_photo {
+	float:left;
+	background-color:#e6e6e6;
+	height:300px;
+	margin:2px;
+	max-width:49.5% !important;
+}
+
+#update_row {
+	height:100px;
+}
+#update_col {
+	display:table;
+}
+#update_button {
+	text-align:center;
+	margin:auto;
+	vertical-align:middle;
+	height:45px;
+	display:table;	
+}
+#update_ptag {
+	display:table-cell;
+	vertical-align:middle;
+}
+
+
+/* 리뷰 */
+#review_row {
+	height:150px;
+}
+#review_button {
+	text-align:center;
+	margin:auto;
+	vertical-align:middle;
+	height:50px;
+	display:table;
+}
+#review_button {
+	cursor:pointer;
+}
+#review_ptag {
+	display:table-cell;
+	vertical-align:middle;
+}
+
+/* 리뷰내용(숨김) */
+#review_inner_row {
+	padding:0px;
+	height:200px;
+}
+#review_inner_left {
+	padding:10px;
+	text-align:right;
+}
+#review_inner_right {
+	padding-top:20px;
+
+}
+#review_inner_img {
+	width:130px;
+	height:130px;
+	border-radius:75%;
+}
+
+/* 리뷰쓰기 */
+.inputAllBox{
+   width: 100%;
+   height: 500px;
+}
+#insertReviewForm{
+   width: 100%;
+   height:400px;
+}
+#write_review_row{
+   height:400px;
+   
+}
+#review_register {
+   height:50px;
+   width:100%;
+   text-align:center;
+   background-color:#e6e6e6;
+   margin:2px;
+   padding-top:12px;
+}
+#write_inner_row {
+   width:100%;
+}
+#write_review_stars {
+   width:fit-content;
+   height:60px; 
+   font-size:30px; 
+   padding-left:20px;
+   color:#f7d707;
+   float:left;
+}
+#write_review_box {
+   height:150px;
+   margin-top:60px;
+   text-align:center;
+}
+#total_stars {
+   float:left;
+   height:60px;
+   font-size:20px;
+   padding-top:10px;
+}
+#review_input {
+   width:95%;
+   height:95%;
+   padding-left:15px;
+}
+#view_img_wrap {
+   text-align:center;
+}
+#content{
+   width: 100%;
+   height:100px;
+   margin-bottom:15px;
+   border-radius: 15px;
+   border: 1px solid rgb(74,188,184);
+}
+.input_wrap label{
+   display: inline-block;
+   padding: .5em .75em;
+   color: white;
+   font-size: inherit;
+   line-height: normal;
+   vertical-align: middle;
+   background-color: rgb(74,188,184);
+   cursor: pointer;
+   border: 1px solid rgb(74,188,184);
+   border-bottom-color: #e2e2e2;
+   border-radius: .25em;
+
+}
+.input_wrap input[type="file"] {
+   /* 파일 필드 숨기기 */
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   padding: 0;
+   margin: -1px;
+   overflow: hidden;
+   clip:rect(0,0,0,0);
+   border: 0;
+   }
+
+#insertBtn{
+   display: inline-block;
+   padding: .5em .75em;
+   color: white;
+   font-size: inherit;
+   line-height: normal;
+   vertical-align: middle;
+   background-color: rgb(74,188,184);
+   cursor: pointer;
+   border: 1px solid rgb(74,188,184);
+   border-bottom-color: #e2e2e2;
+   border-radius: .25em;
+   
+}
+.insertImages{
+   height:250px;
+   margin-bottom:10px;
+}
+.img_wrap{
+   width:100%;
+   
+}

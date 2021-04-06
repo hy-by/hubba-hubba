@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.hubba.mapper.BusinessMapper">
+	
+	<select resultType="com.hubba.vo.BusinessVO" id="selectCategory"> 
+		select * from business where category_group_name=#{category_group_name} order by review_rating desc 
+	</select>
+	
+	<select id="bookmarkBusiness" resultType="com.hubba.vo.BusinessVO">
+		SELECT * FROM bookmark INNER JOIN business ON (bookmark.business_idx = business.idx) WHERE user_idx=#{user_idx}
+	</select>
+	
+	<select id="businessIdx" resultType="Integer">
+		select idx from business where phone =#{phone} and road_address_name=#{road_address_name}
+	</select>
+	
+	<select id="businessInfo" resultType="com.hubba.vo.BusinessVO">
+		select * from business where idx=#{idx}
+	</select>
+	
+	<insert id="insertTempPlace">
+		insert into temp_place(place_name,road_address_name,phone,x,y,category_group_name) values(#{place_name},#{road_address_name},#{phone},#{x},#{y},#{category_group_name})
+	</insert>
+	
+	<select resultType="com.hubba.vo.BusinessVO" id="selectAllTempPlace"> 
+		select * from temp_place
+	</select>
+	
+	<insert id="insertBusiness">
+		insert into business(place_name,road_address_name,phone,x,y,category_group_name) values(#{place_name},#{road_address_name},#{phone},#{x},#{y},#{category_group_name})
+	</insert>
+	
+	<delete id="deleteTempPlace">
+		delete from temp_place where idx=#{idx};
+	</delete>
+	
+
+	<!-- 도연추가 -->
+	
+	<select resultType="com.hubba.vo.BusinessVO" id="selectinfiniteloading">
+	 select * from business where category_group_name=#{category_group_name} order by review_rating desc limit #{start}, 10;</select>
+	 
+	 <select resultType="com.hubba.vo.BusinessVO" id="selectBusinessDetails">
+	 select * from business LEFT OUTER JOIN amenity on business.idx=amenity.business_idx
+	 where business.idx=#{idx};
+	 </select>
+	 
+	 <select id="getReviewImages" resultType="String">
+         select review.images from business inner join review on business.idx=review.business_idx where business.idx=#{idx} and review.images <![CDATA[ <> ]]> 'null'order by review.date desc limit 1;
+    </select>
+
+
+
+	<!-- 새봄추가 -->
+	
+	<select id="selectBusinessInfo" resultType="com.hubba.vo.BusinessVO">
+		SELECT *,(6371*acos(cos(radians(#{x}))*cos(radians(x))*cos(radians(y)-radians(#{y}))+sin(radians(#{x}))*sin(radians(x)))) AS distance FROM business
+      WHERE place_name LIKE CONCAT('%',#{place_name},'%') OR category_group_name LIKE CONCAT('%',#{category_group_name},'%')
+      HAVING distance <![CDATA[<=]]> 2 ORDER BY distance, review_rating	</select>
+      <update id="updateRating">
+         update business set review_rating=#{review_rating} where idx=#{idx}
+      </update>
+      
+	
+</mapper>
