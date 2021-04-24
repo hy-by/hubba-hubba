@@ -17,6 +17,10 @@ local.properties
 .classpath
 .project
 config.properties
+KakaoLoginService.java
+NaverLoginService.java
+
+
 
 # External tool builders
 .externalToolBuilders/
