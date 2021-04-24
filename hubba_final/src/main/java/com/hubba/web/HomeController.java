@@ -256,7 +256,7 @@ public class HomeController {
 
 	}
 
-	@RequestMapping(value = "/afterRegister", method = RequestMethod.POST)
+	@RequestMapping(value = "/afterRegister", method = RequestMethod.GET)
 	public String afterRegister(@RequestParam("id") String id, @RequestParam("pw") String pw,
 			@RequestParam("name") String name, HttpSession session) {
 		System.out.println("입력한 아이디 : " + id);
@@ -275,6 +275,8 @@ public class HomeController {
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		System.out.println("입력한 아이디 : " + id);
 		System.out.println("입력한 비밀번호 : " + pw);
+		
+		System.out.println(session.getAttribute("url"));
 
 		if (service_users.idCheck(id) == 1) {
 			System.out.println("아이디 존재");
@@ -320,20 +322,23 @@ public class HomeController {
 
 	@RequestMapping(value = "/afterLogin", method = { RequestMethod.GET, RequestMethod.POST })
 	public RedirectView afterLogin(HttpSession session, Model model, HttpServletRequest request) throws IOException {
-
+		System.out.println("여기들어옴!");
 		RedirectView redirectView = new RedirectView();
-		if (session.getAttribute("url") == null) {
-			redirectView.setUrl(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/web");
-
+		System.out.println(session.getAttribute("url"));
+		if (session.getAttribute("url") == null || session.getAttribute("url").toString().contains("login2")) {
+			redirectView.setUrl(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/web/main");
 			List<ReviewVO> review_list = service_review.selectNewReview();
 			model.addAttribute("review_list", review_list);
+			System.out.println("1");
 
 		} else {
 			redirectView.setUrl(session.getAttribute("url").toString());
 			List<ReviewVO> review_list = service_review.selectNewReview();
 			model.addAttribute("review_list", review_list);
+			System.out.println("2");
 		}
 
+		System.out.println("여기로이동해!!!"+redirectView.getUrl());
 		return redirectView;
 
 	}
@@ -392,6 +397,11 @@ public class HomeController {
 	@RequestMapping(value = "/registration")
 	public String registration() {
 		return "redirect:/login2";
+	}
+	
+	@RequestMapping(value = "/real_register")
+	public String realRegister() {
+		return "real_register1";
 	}
 
 	@RequestMapping(value = "/login_btn")
