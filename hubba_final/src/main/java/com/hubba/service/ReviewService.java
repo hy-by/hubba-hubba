@@ -24,4 +24,5 @@ public interface ReviewService {
 	public double reviewAvg(int business_idx);
 	public void updateLikes(int business_idx, int idx, int total_likes);
 	public List<ReviewVO> selectNewReview();
+	public List<ReviewVO> orderByPopularReview(int business_idx);
 }

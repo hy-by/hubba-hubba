@@ -68,7 +68,6 @@ public class ReviewDAOImpl implements ReviewDAO {
 		
 	}
 
-
 	@Override
 	public List<ReviewVO> selectAllReview(int business_idx) {
 		
@@ -103,6 +102,14 @@ public class ReviewDAOImpl implements ReviewDAO {
 		List<ReviewVO> list = sqlSession.selectList("com.hubba.mapper.ReviewMapper.newReview");
 		return list;
 	}
+	
+	@Override
+	public List<ReviewVO> orderByPopularReview(int business_idx) {
+		List<ReviewVO> list = sqlSession.selectList("com.hubba.mapper.ReviewMapper.popularReview", business_idx);
+		return list;
+	}
+	
+	
 
 	   
 	

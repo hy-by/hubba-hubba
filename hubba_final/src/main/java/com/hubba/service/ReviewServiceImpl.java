@@ -168,4 +168,10 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
+	@Override
+	public List<ReviewVO> orderByPopularReview(int business_idx) {
+		List<ReviewVO> list = dao.orderByPopularReview(business_idx);
+		return list;
+	}
+
 }
