@@ -807,45 +807,13 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 		int countReview = 0;
 		if (session.getAttribute("name") != null) {
-			System.out.println("들어옴");
 			request.setAttribute("idx", session.getAttribute("idx").toString());
-
-			// review part(새봄)
-			List<ReviewVO> review_list = service_review.selectAllReview(idx);
-			countReview = service_review.countAllReview(idx);
-			System.out.println("review 개수 : " + countReview);
-
 			int user_idx = Integer.parseInt(session.getAttribute("idx").toString());
-			// int user_idx = 8;
-
-			List<LikesVO> likes_list = service_likes.selectAll(idx);
-			// 좋아요 총 갯수
-			int totalLikes = 0;
-			for (ReviewVO r : review_list) {
-				totalLikes = service_likes.countLikes(idx, r.getIdx());
-				r.setTotal_likes(totalLikes);
-				service_review.updateLikes(idx, r.getIdx(), totalLikes);
-			}
-
-			int count = 0;
-			int like_review_idx = 0;
-			for (LikesVO like : likes_list) {
-				like_review_idx = like.getReview_idx();
-				// System.out.println("like의 review_idx >> " + like.getReview_idx());
-				for (ReviewVO v : review_list) {
-					if (like_review_idx == v.getIdx()) {
-						count = service_likes.showLikes(idx, user_idx, v.getIdx());
-						v.setLikes(count);
-						System.out.println("review_idx >> " + v.getIdx() + " / count >> " + count);
-					}
-				}
-			}
-			
+			// 총 리뷰 개수
+			countReview = service_review.countAllReview(idx);
 
 			model.addAttribute("user_idx", user_idx);
 			model.addAttribute("review_count", countReview);
-			model.addAttribute("review", review_list);
-
 			model.addAttribute("name", session.getAttribute("name").toString());
 			model.addAttribute("id", session.getAttribute("id").toString());
 			model.addAttribute("profile_img", session.getAttribute("profile_img").toString());
@@ -1116,6 +1084,46 @@ public class HomeController {
 	}
 
 	@ResponseBody
+	@PostMapping(value = "/orderReply")
+	public List<ReviewVO> orderReply(HttpServletRequest req, Model model) {
+		
+		List<ReviewVO> list = new ArrayList<ReviewVO>();
+		String radio_type = req.getParameter("radio_val");
+		int business_idx = Integer.parseInt(req.getParameter("business_idx"));
+		int user_idx = Integer.parseInt(req.getParameter("user_idx"));
+		
+		System.out.println("버튼타입: " + radio_type);
+		System.out.println("business idx: " + business_idx);
+		
+		if ("latest_likes".equals(radio_type)) {
+			list = service_review.selectAllReview(business_idx);
+		} else if ("popular_likes".equals(radio_type)) {
+			list = service_review.orderByPopularReview(business_idx);
+		}
+
+		// 좋아요 체크 유무
+		List<LikesVO> likes_list = service_likes.selectAll(business_idx);
+		int count = 0;
+		int like_review_idx = 0;
+		for (LikesVO like : likes_list) {
+			like_review_idx = like.getReview_idx();
+			for (ReviewVO v : list) {
+				if (like_review_idx == v.getIdx()) {
+					count = service_likes.showLikes(business_idx, user_idx, v.getIdx());
+					v.setLikes(count);
+				}
+			}
+		}
+
+		if(list != null) {
+			model.addAttribute("review", list);
+		}
+
+		return list;
+
+	}
+	
+	@ResponseBody
 	@RequestMapping("/likes")
 	public Map<String, Integer> checkLikes(HttpServletRequest req, LikesVO vo) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
@@ -1124,24 +1132,23 @@ public class HomeController {
 		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
 		int value = Integer.parseInt(req.getParameter("value"));
 
-		// 좋아요 총 갯수
-		int review_rating = 0;
-
 		if (value == 1) {
+			// 좋아요 누름
 			service_likes.checkedLikes(vo);
-			review_rating = service_likes.countLikes(business_idx, review_idx);
-			service_review.updateLikes(business_idx, review_idx, review_rating);
+			int totalLikes = service_likes.countLikes(business_idx, review_idx);
+			service_review.updateLikes(business_idx, review_idx, totalLikes);
+			map.put("review_rating", totalLikes);
 		} else if (value == 0) {
-			service_likes.uncheckedLikes(review_idx);
-			review_rating = service_likes.countLikes(business_idx, review_idx);
-			service_review.updateLikes(business_idx, review_idx, review_rating);
+			// 좋아요 취소
+			service_likes.uncheckedLikes(business_idx, user_idx, review_idx);
+			int totalLikes = service_likes.countLikes(business_idx, review_idx);
+			service_review.updateLikes(business_idx, review_idx, totalLikes);
+			map.put("review_rating", totalLikes);
 		}
-
 		map.put("user_idx", user_idx);
 		map.put("business_idx", business_idx);
 		map.put("review_idx", review_idx);
 		map.put("value", value);
-		map.put("review_rating", review_rating);
 
 		return map;
 	}

@@ -32,26 +32,30 @@
 	
 	
 	<!-- 새봄추가 -->
+	<!-- 모든, 최신순 -->
 	<select id="selectAllReview" resultType="com.hubba.vo.ReviewVO">
 	select * from review INNER JOIN users on review.user_idx=users.idx where business_idx = #{business_idx} order by date desc
 	</select>
 	<!-- 상세페이지 평균 별점 -->
 	<select id="averageReview" resultType="double">
-		select AVG(rating) from review where business_idx = #{business_idx}
+	select AVG(rating) from review where business_idx = #{business_idx}
 	</select>
 	<!-- 리뷰 입력하기(user_idx는 session으로 , business_idx는 parameter로 받아와야함 -->
 	<insert id="insertReview">
-		insert into review(user_idx, business_idx, rating, content, images) values(#{user_idx}, #{business_idx}, #{rating}, #{content}, #{images})
+	insert into review(user_idx, business_idx, rating, content, images) values(#{user_idx}, #{business_idx}, #{rating}, #{content}, #{images})
 	</insert>
 	<select id="countAllReview" resultType="Integer">
-		select count(*) from review where business_idx=#{business_idx}
+	select count(*) from review where business_idx=#{business_idx}
 	</select>
 	<update id="updateLikes">
-      update review set total_likes=#{total_likes} where business_idx=#{business_idx} and idx=#{idx}
-   </update>
-   <select id="newReview" resultType="com.hubba.vo.ReviewVO">
+    update review set total_likes=#{total_likes} where business_idx=#{business_idx} and idx=#{idx}
+	</update>
+	<select id="newReview" resultType="com.hubba.vo.ReviewVO">
 	select * from review INNER JOIN users on review.user_idx=users.idx inner join business on review.business_idx=business.idx where review.images <![CDATA[ <> ]]> 'null' order by date desc;
-   </select>
+	</select>
+	<select id="popularReview" resultType="com.hubba.vo.ReviewVO">
+	select * from review INNER JOIN users on review.user_idx=users.idx where business_idx = #{business_idx} order by total_likes desc, date desc
+	</select>
    
    
 </mapper>

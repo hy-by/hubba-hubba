@@ -263,14 +263,12 @@ p, p a { font-size: 12px;text-align: center; color: #888; }
 /* 리뷰쓰기 */
 .inputAllBox{
    width: 100%;
-   height: 500px;
 }
 #insertReviewForm{
    width: 100%;
-   height:400px;
 }
 #write_review_row{
-   height:400px;
+   /*height:400px;*/
    
 }
 #review_register {
@@ -358,11 +356,6 @@ p, p a { font-size: 12px;text-align: center; color: #888; }
    border-radius: .25em;
    
 }
-.insertImages{
-   height:250px;
-   margin-bottom:10px;
-}
-.img_wrap{
-   width:100%;
+
    
 }
