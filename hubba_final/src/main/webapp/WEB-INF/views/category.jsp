@@ -4,6 +4,7 @@
 <%@ page session="false" %>
 <%@page import="com.hubba.vo.BusinessVO"%>
 <%@page import="java.util.List"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
    
 <!DOCTYPE html>
 <html>
@@ -127,7 +128,7 @@
          <div id="map" style="width:75%;height:500px; float:left; margin-left:15%;"></div>
          &nbsp;
          <!-- 지도 -->
-         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오키값"></script>
+         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<spring:eval expression="@config.getProperty('KAKAO_API_KEY')"></spring:eval>"></script>
          
          <script>
             <%
@@ -187,7 +188,7 @@
             <section class="img-list">
                <ol class='img-list-parent results'></ol>   
             </section>
-         </div>                  
+         </div>                
       </div> <!-- category col end -->
       <div class="col-1"></div>
    </div> <!--  category row end -->

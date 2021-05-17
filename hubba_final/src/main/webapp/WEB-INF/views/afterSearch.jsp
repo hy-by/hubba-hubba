@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -137,7 +138,7 @@
 	crossorigin="anonymous">
 </script>
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오키값"></script>
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<spring:eval expression="@config.getProperty('KAKAO_API_KEY')"></spring:eval>"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
 </head>
@@ -150,7 +151,7 @@
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 		mapOption = {
 			center : new kakao.maps.LatLng('${latitude}', '${longitude}'), // 지도의 중심좌표
-			level : 5
+			level : 3
 		// 지도의 확대 레벨
 		};
 
@@ -191,6 +192,7 @@
 
 	<!-- end of map display -->
 	<!-- start of list(places) display -->
+	
 	<div style=" width: 73%;margin: 4% auto;">
 		<section class="img-list">
 			<ol class='img-list-parent'>

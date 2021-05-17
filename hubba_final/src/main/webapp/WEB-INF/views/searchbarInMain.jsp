@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=구글키값"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<spring:eval expression="@config.getProperty('GOOGLE_API_KEY')"></spring:eval>"></script>
 <meta charset="UTF-8">
 <title></title>
 </head>
 <body>
-
 	<div id="search_wrap">
 		<form action="search_storage" method="post">
 			<input type="text" placeholder="검색하세요" id="search_left" name="keyword"/>

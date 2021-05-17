@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page session="false"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -707,10 +708,8 @@ if ((String[])request.getAttribute("allImages")!=null){
 		</div>
 	</div>
 
-
-
 	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오키값"></script>
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<spring:eval expression="@config.getProperty('KAKAO_API_KEY')"></spring:eval>"></script>
 
 	<script>
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
