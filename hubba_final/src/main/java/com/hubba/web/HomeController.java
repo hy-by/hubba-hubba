@@ -29,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -87,7 +88,6 @@ public class HomeController {
 	LikesService service_likes;
 
 	// 민희 추가
-
 	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST })
 	public String home(Model model, HttpSession session, HttpServletRequest request) {
 
@@ -102,7 +102,7 @@ public class HomeController {
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String home2(HttpServletRequest request, Model model) {
 		request.setAttribute("idx", "notLogin");
-		
+
 		HttpSession session = request.getSession(true);
 
 		if (session.getAttribute("name") != null) {
@@ -117,7 +117,7 @@ public class HomeController {
 		}
 		List<ReviewVO> review_list = service_review.selectNewReview();
 		model.addAttribute("review_list", review_list);
-		
+
 		session.setAttribute("url", request.getHeader("referer"));
 
 		return "main";
@@ -256,7 +256,7 @@ public class HomeController {
 
 	}
 
-	@RequestMapping(value = "/afterRegister", method = RequestMethod.GET)
+	@RequestMapping(value = "/afterRegister", method = RequestMethod.POST)
 	public String afterRegister(@RequestParam("id") String id, @RequestParam("pw") String pw,
 			@RequestParam("name") String name, HttpSession session) {
 		System.out.println("입력한 아이디 : " + id);
@@ -275,8 +275,6 @@ public class HomeController {
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		System.out.println("입력한 아이디 : " + id);
 		System.out.println("입력한 비밀번호 : " + pw);
-		
-		System.out.println(session.getAttribute("url"));
 
 		if (service_users.idCheck(id) == 1) {
 			System.out.println("아이디 존재");
@@ -322,23 +320,21 @@ public class HomeController {
 
 	@RequestMapping(value = "/afterLogin", method = { RequestMethod.GET, RequestMethod.POST })
 	public RedirectView afterLogin(HttpSession session, Model model, HttpServletRequest request) throws IOException {
-		System.out.println("여기들어옴!");
+
 		RedirectView redirectView = new RedirectView();
-		System.out.println(session.getAttribute("url"));
-		if (session.getAttribute("url") == null || session.getAttribute("url").toString().contains("login2")) {
-			redirectView.setUrl(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/web/main");
+		if (session.getAttribute("url") == null) {
+			redirectView.setUrl(
+					request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/web");
+
 			List<ReviewVO> review_list = service_review.selectNewReview();
 			model.addAttribute("review_list", review_list);
-			System.out.println("1");
 
 		} else {
 			redirectView.setUrl(session.getAttribute("url").toString());
 			List<ReviewVO> review_list = service_review.selectNewReview();
 			model.addAttribute("review_list", review_list);
-			System.out.println("2");
 		}
 
-		System.out.println("여기로이동해!!!"+redirectView.getUrl());
 		return redirectView;
 
 	}
@@ -397,11 +393,6 @@ public class HomeController {
 	@RequestMapping(value = "/registration")
 	public String registration() {
 		return "redirect:/login2";
-	}
-	
-	@RequestMapping(value = "/real_register")
-	public String realRegister() {
-		return "real_register1";
 	}
 
 	@RequestMapping(value = "/login_btn")
@@ -622,7 +613,8 @@ public class HomeController {
 
 	@RequestMapping(value = "/myBookmark")
 	public String myBookmark(Model model, HttpServletRequest request, HttpSession session) {
-		List<BusinessVO> list = service_business.bookmarkBusiness(Integer.parseInt(session.getAttribute("idx").toString()));
+		List<BusinessVO> list = service_business
+				.bookmarkBusiness(Integer.parseInt(session.getAttribute("idx").toString()));
 		request.setAttribute("idx", Integer.parseInt(session.getAttribute("idx").toString()));
 		model.addAttribute("list", list);
 
@@ -637,24 +629,28 @@ public class HomeController {
 		return "real_myBookmark";
 	}
 
-	 @RequestMapping(value = "/deleteBookmark", method = RequestMethod.POST)
-		public @ResponseBody String AjaxViewDB(@RequestParam("user_idx") String user_idx,@RequestParam("business_phone") String phone,
-				@RequestParam("business_road_address_name") String road_address_name){
-		 System.out.println(user_idx);
-			System.out.println("삭제요!");
-			System.out.println(user_idx);
-			service_bookmark.deleteBookmark(Integer.parseInt(user_idx), service_business.businessIdx(phone,road_address_name));
-			return "delete";
-		}
-		
-		@RequestMapping(value = "/insertBookmark", method = RequestMethod.POST)
-		public @ResponseBody String AjaxViewIB(@RequestParam("user_idx") String user_idx,@RequestParam("business_phone") String phone,
-				@RequestParam("business_road_address_name") String road_address_name){
-			System.out.println("북마크요~!");
-			System.out.println(user_idx);
-			service_bookmark.insertBookmark(Integer.parseInt(user_idx), service_business.businessIdx(phone,road_address_name));
-			return "insert";
-		}
+	@RequestMapping(value = "/deleteBookmark", method = RequestMethod.POST)
+	public @ResponseBody String AjaxViewDB(@RequestParam("user_idx") String user_idx,
+			@RequestParam("business_phone") String phone,
+			@RequestParam("business_road_address_name") String road_address_name) {
+		System.out.println(user_idx);
+		System.out.println("삭제요!");
+		System.out.println(user_idx);
+		service_bookmark.deleteBookmark(Integer.parseInt(user_idx),
+				service_business.businessIdx(phone, road_address_name));
+		return "delete";
+	}
+
+	@RequestMapping(value = "/insertBookmark", method = RequestMethod.POST)
+	public @ResponseBody String AjaxViewIB(@RequestParam("user_idx") String user_idx,
+			@RequestParam("business_phone") String phone,
+			@RequestParam("business_road_address_name") String road_address_name) {
+		System.out.println("북마크요~!");
+		System.out.println(user_idx);
+		service_bookmark.insertBookmark(Integer.parseInt(user_idx),
+				service_business.businessIdx(phone, road_address_name));
+		return "insert";
+	}
 
 	@RequestMapping(value = "/myReview")
 	public String myReview(Model model, HttpServletRequest request, HttpSession session) {
@@ -687,8 +683,9 @@ public class HomeController {
 			@RequestParam("p_category") String p_category, @RequestParam("p_x") String p_x,
 			@RequestParam("p_y") String p_y) {
 
-		 service_business.insertBusiness(p_name, p_address, p_phone, p_x, p_y,p_category);
-		//service_business.insertTempPlace(p_name, p_address, p_phone, p_x, p_y, p_category);
+		service_business.insertBusiness(p_name, p_address, p_phone, p_x, p_y, p_category);
+		// service_business.insertTempPlace(p_name, p_address, p_phone, p_x, p_y,
+		// p_category);
 		return "insert";
 	}
 
@@ -717,11 +714,11 @@ public class HomeController {
 	 * 
 	 */
 
-	@RequestMapping(value = "/viewdetails", method = RequestMethod.GET)
-	public String viewdetails(Locale locale, Model model) {
-
-		return "viewDetails";
-	}
+//	@RequestMapping(value = "/viewdetails", method = RequestMethod.GET)
+//	public String viewdetails(Locale locale, Model model) {
+//
+//		return "viewDetails";
+//	}
 
 	@RequestMapping(value = "/category", method = RequestMethod.GET)
 	public String category(Locale locale, Model model,
@@ -744,7 +741,7 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 
 		if (session.getAttribute("name") != null) {
-			System.out.println("널값아님");
+//			System.out.println("널값아님");
 			model.addAttribute("name", session.getAttribute("name").toString());
 			model.addAttribute("id", session.getAttribute("id").toString());
 			model.addAttribute("profile_img", session.getAttribute("profile_img").toString());
@@ -764,11 +761,12 @@ public class HomeController {
 			@RequestParam(value = "category_group_name", required = false) String category_group_name) {
 		Map categories = new HashMap();
 		categories.put("start", Integer.parseInt(start));
+		System.out.println("start : " + start);
 		categories.put("category_group_name", category_group_name);
 		List<BusinessVO> list = service_business.selectinfiniteloading(categories);
 
 //		for(BusinessVO temp: list) {
-//			System.out.println(temp.getBusiness_idx());
+//			System.out.println("json ajax : " + temp.getBusiness_idx());
 //		}
 		if (list.get(0) != null) {
 			return list;
@@ -779,7 +777,7 @@ public class HomeController {
 		}
 
 	}
-
+	
 	@RequestMapping(value = "/categoryDetail", method = { RequestMethod.GET, RequestMethod.POST })
 	public String json2(Locale locale, Model model, Integer idx, HttpServletRequest request, ReviewVO vo,
 			LikesVO likesVo) {
@@ -802,7 +800,7 @@ public class HomeController {
 		request.setAttribute("randomImages", randomImages);
 		request.setAttribute("idx", "notLogin");
 		request.setAttribute("checkBookmark", 2);
-		request.setAttribute("nameCompare", "ssibal");
+		request.setAttribute("nameCompare", "loginType");
 
 		HttpSession session = request.getSession(true);
 		int countReview = 0;
@@ -822,11 +820,11 @@ public class HomeController {
 
 			request.setAttribute("checkBookmark", service_bookmark.checkBookmark(user_idx, idx));
 		}
-		if(countReview != 0) {
+		if (countReview != 0) {
 			double rating_average = service_review.reviewAvg(idx);
 			double average = Double.parseDouble(String.format("%.1f", rating_average));
 			service_business.updateRating(idx, average);
-			
+
 		}
 		model.addAttribute("business_idx", idx);
 
@@ -908,249 +906,5 @@ public class HomeController {
 		return "redirect:admin";
 	}
 
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 새봄추가!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-
-	@RequestMapping(value = "/header", method = { RequestMethod.POST, RequestMethod.GET })
-	public String head() {
-		return "header_main";
-	}
-
-	// 민희가 손 댐
-
-	@RequestMapping(value = "/search_storage")
-	public String searchStorage(String keyword, String x, String y, HttpSession session) {
-		session.setAttribute("keyword", keyword);
-		session.setAttribute("x", x);
-		session.setAttribute("y", y);
-		return "redirect:search";
-	}
-
-	@RequestMapping(value = "/search")
-	public String searchPage(Model model, HttpServletRequest request) {
-
-		HttpSession session = request.getSession(true);
-
-		if (session.getAttribute("name") != null) {
-			System.out.println("널값아님");
-			model.addAttribute("name", session.getAttribute("name").toString());
-			model.addAttribute("id", session.getAttribute("id").toString());
-			model.addAttribute("profile_img", session.getAttribute("profile_img").toString());
-			model.addAttribute("nameCompare", session.getAttribute("nameCompare").toString());
-			request.setAttribute("nameCompare", session.getAttribute("nameCompare").toString());
-		}
-
-		String keyword2 = session.getAttribute("keyword").toString();
-		String keyword = keyword2.replaceAll(" ", "");
-		System.out.println(keyword);
-		
-		if(keyword.equals("코인노래방")) {
-			keyword="코노";
-		}
-		
-		String x = session.getAttribute("x").toString();
-		String y = session.getAttribute("y").toString();
-
-		List<BusinessVO> list = service_business.getBusinessInfo(keyword, x, y);
-
-		Calendar cal = Calendar.getInstance();
-		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		String today = "";
-		String images = "";
-		for (BusinessVO b : list) {
-			List<HoursVO> hour_list = service_hours.selectToday(b.getIdx(), dayOfWeek);
-			images = service_business.getReviewImage(b.getIdx());
-			b.setImages(images);
-
-			for (HoursVO h : hour_list) {
-				today = h.getOpen() + " - " + h.getClose();
-				b.setToday(today);
-			}
-		}
-
-		model.addAttribute("list", list);
-		model.addAttribute("keyword", keyword);
-		// y값
-		model.addAttribute("latitude", y);
-		// x값
-		model.addAttribute("longitude", x);
-
-		return "search_page";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/insertReview")
-	public Map<String, Object> insertReview(HttpServletRequest req, ReviewVO vo) throws Exception { // @RequestBody
-																									// ReviewVO vo
-		Map<String, Object> map = new HashMap<String, Object>();
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date time = new Date();
-
-		String content = multipartRequest.getParameter("content");
-		int rating = Integer.parseInt(multipartRequest.getParameter("rating"));
-		int user_idx = Integer.parseInt(multipartRequest.getParameter("user_idx"));
-		int business_idx = Integer.parseInt(multipartRequest.getParameter("business_idx"));
-		String imagesStr = "";
-		String id = "";
-		String profile_img = "";
-		String date = format.format(time);
-		System.out.println("별점 : " + rating);
-
-		List<UsersVO> user_list = service_users.selectAll(user_idx);
-		for (UsersVO u : user_list) {
-			id = u.getId();
-			profile_img = u.getProfile_img();
-		}
-
-		// String filepath = application.getRealPath("/resources/Upload");
-		String filepath = req.getSession().getServletContext().getRealPath("resources/img/");
-
-		List<MultipartFile> fileList = multipartRequest.getFiles("multiparts");
-		String filename = "";
-		for (MultipartFile mf : fileList) {
-			if (mf.isEmpty() == false) {
-				filename = mf.getOriginalFilename();
-
-				File file = new File(filepath, filename);
-
-				if (file.exists() == false) {
-					file.mkdirs();
-				}
-				mf.transferTo(file);
-
-				imagesStr += filename + "&";
-			}
-		}
-
-		String contentError = "";
-		int ratingError = 0;
-		String images = "";
-		if (content.equals("")) {
-			contentError = "empty";
-			map.put("contentError", contentError);
-		} else if (rating == 0) {
-			ratingError = -1;
-			map.put("ratingError", ratingError);
-		} else {
-			if (imagesStr.equals("")) {
-				vo.setImages(null);
-				service_review.insertReview(vo);
-			} else {
-				images = imagesStr.substring(0, imagesStr.length() - 1);
-				vo.setImages(images);
-				service_review.insertReview(vo);
-			}
-		}
-		int countReview = service_review.countAllReview(business_idx);
-		double rating_average = service_review.reviewAvg(business_idx);
-		double average = Double.parseDouble(String.format("%.1f", rating_average));
-		service_business.updateRating(business_idx, average);
-
-		map.put("user_idx", user_idx);
-		map.put("business_idx", business_idx);
-		map.put("rating", rating);
-		map.put("images", images);
-		map.put("content", content);
-		map.put("date", date);
-		map.put("id", id);
-		map.put("profile_img", profile_img);
-		map.put("review_count", countReview);
-
-		return map;
-
-	}
-
-	@ResponseBody
-	@PostMapping(value = "/orderReply")
-	public List<ReviewVO> orderReply(HttpServletRequest req, Model model) {
-		
-		List<ReviewVO> list = new ArrayList<ReviewVO>();
-		String radio_type = req.getParameter("radio_val");
-		int business_idx = Integer.parseInt(req.getParameter("business_idx"));
-		int user_idx = Integer.parseInt(req.getParameter("user_idx"));
-		
-		System.out.println("버튼타입: " + radio_type);
-		System.out.println("business idx: " + business_idx);
-		
-		if ("latest_likes".equals(radio_type)) {
-			list = service_review.selectAllReview(business_idx);
-		} else if ("popular_likes".equals(radio_type)) {
-			list = service_review.orderByPopularReview(business_idx);
-		}
-
-		// 좋아요 체크 유무
-		List<LikesVO> likes_list = service_likes.selectAll(business_idx);
-		int count = 0;
-		int like_review_idx = 0;
-		for (LikesVO like : likes_list) {
-			like_review_idx = like.getReview_idx();
-			for (ReviewVO v : list) {
-				if (like_review_idx == v.getIdx()) {
-					count = service_likes.showLikes(business_idx, user_idx, v.getIdx());
-					v.setLikes(count);
-				}
-			}
-		}
-
-		if(list != null) {
-			model.addAttribute("review", list);
-		}
-
-		return list;
-
-	}
-	
-	@ResponseBody
-	@RequestMapping("/likes")
-	public Map<String, Integer> checkLikes(HttpServletRequest req, LikesVO vo) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		int user_idx = Integer.parseInt(req.getParameter("user_idx"));
-		int business_idx = Integer.parseInt(req.getParameter("business_idx"));
-		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
-		int value = Integer.parseInt(req.getParameter("value"));
-
-		if (value == 1) {
-			// 좋아요 누름
-			service_likes.checkedLikes(vo);
-			int totalLikes = service_likes.countLikes(business_idx, review_idx);
-			service_review.updateLikes(business_idx, review_idx, totalLikes);
-			map.put("review_rating", totalLikes);
-		} else if (value == 0) {
-			// 좋아요 취소
-			service_likes.uncheckedLikes(business_idx, user_idx, review_idx);
-			int totalLikes = service_likes.countLikes(business_idx, review_idx);
-			service_review.updateLikes(business_idx, review_idx, totalLikes);
-			map.put("review_rating", totalLikes);
-		}
-		map.put("user_idx", user_idx);
-		map.put("business_idx", business_idx);
-		map.put("review_idx", review_idx);
-		map.put("value", value);
-
-		return map;
-	}
 
 }

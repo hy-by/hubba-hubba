@@ -12,10 +12,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="http://code.jquery.com/jquery-latest.js"></script> 
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
 $(document).ready(function() {
-	select_order_reply("latest_likes");
+	// 리뷰 최신순, 1페이지로 세팅
+	select_order_reply("latest_likes", "1");
+	
    //별점
    $(".starGrade a").click(function() {
       $(this).parent().children("a").removeClass("on");
@@ -30,9 +32,7 @@ $(document).ready(function() {
 
       $("#rating").val(count);
       //alert(count);
-   });
-   
-   
+   });	  
 
 });
 </script>
@@ -74,13 +74,12 @@ a.likesBtn:hover {
 	text-decoration: none !important;
 	color: #db2d21 !important;
 }
+}
 </style>
 </head>
 <body>
 <hr>
-
-	<!-- display: none; 추가 해야함 -->
-	<div class="container-fluid" id="write_review_container" style="width: 70%;"> 
+	<div class="container-fluid" id="write_review_container" style="width: 70%; display: none;"> 
 		<!-- 리뷰쓰기 -->
 		<div class="row">
 			<div class="col-4"></div>
@@ -177,7 +176,8 @@ a.likesBtn:hover {
 
 				<script>
 		         $(function(){
-		            $("#insertBtn").click(function(event){
+	        	 	$(document).on("click", "#insertBtn", function(event){
+		            //$("#insertBtn").click(function(event){
 		               event.preventDefault();
 		
 		               var form = $('#insertReviewForm')[0];
@@ -203,10 +203,15 @@ a.likesBtn:hover {
 		                    var imageArray = imageStr.split('&');
 		                    
 							if(data.contentError == "empty"){
+								console.log(data.contentError);
 								alert("내용을 입력하세요.");
-							}else if(data.ratingError == -1){
+							}
+							if(data.ratingError == "-1"){
+								console.log(data.ratingError);
 								alert("별점을 입력하세요.");
-							}else{
+							}
+							
+							if(data.rating && data.content){
 								var nameCompare = "<%=request.getAttribute("nameCompare").toString()%>";
 								// 변수명 변경하기
 								if(nameCompare!="loginType"){
@@ -247,7 +252,7 @@ a.likesBtn:hover {
 							} /*else end*/
 							
 		                    var review_count = data.review_count;
-		                    $(".allCount").text(review_count + " Reviews");
+		                    $("#allReviewNum").text(review_count);
 
 		                    // 댓글이 1개 이상이면 이미지 지우기
 		                    if(review_count > 0){
@@ -261,7 +266,8 @@ a.likesBtn:hover {
 		                    $(".starGrade a").parent().children("a").removeClass("on");
 		                    $("#review_register").prop("disabled", false);
 		                    // 새 후기 입력시 라디오 버튼 최신순으로 세팅
-		                    //$("input:radio[id='latest_tab']").prop('checked', true);
+		                    $("input:radio[id='latest_tab']").prop('checked', true);
+		                    select_order_reply("latest_likes", 1);
 		                     
 		                  },   //data-success
 		                  error: function(e){
@@ -280,46 +286,87 @@ a.likesBtn:hover {
 			<div class="review_header" style="margin: 20px 0px; border-bottom: 1px solid gray; padding-bottom: 7px;">
 				<div class="allCount" style="float:left;"><b id="allReviewNum">${review_count }</b> Reviews</div>
 					<div class="radioBtn" style="text-align: end;">
-						<input type="radio" id="latest_tab" name="radio_type" value="latest_likes" onclick="select_order_reply(this.value);" checked/>
-						<label for="latest_tab">최신순</label>
-						<input type="radio" id="popular_tab" name="radio_type" value="popular_likes" onclick="select_order_reply(this.value);"/>
+						<input type="radio" id="latest_tab" name="radio_type" value="latest_likes" onclick="select_order_reply(this.value, 1);" />
+						<label for="latest_tab">최신순</label>&nbsp;&nbsp;
+						<input type="radio" id="popular_tab" name="radio_type" value="popular_likes" onclick="select_order_reply(this.value, 1);"/>
 						<label for="popular_tab">좋아요순</label>
 					</div>
 
 			</div>
-			<div class="reviewSection" id="reviewContent"></div><!-- reviewSection end -->
+			<!-- 리뷰가 0개인 경우 이미지로 대체 -->
+			<c:choose>
+				<c:when test="${review_count eq 0 }">
+					<div id="newRecordImg">
+						<img src="resources/img/newRecord2.jpg" style="width: 60%; margin-left: 20%; " />
+					</div>
+				</c:when>
+			</c:choose>
+			<div class="reviewSection" id="reviewContent"></div>
 			<script>
+			// 라디오 버튼 check값
+			$(document).on("click", "input:radio[name='radio_type']", function(e){
+				if($(this).val() == "latest_likes"){
+					$(":radio[name='radio_type'][value='popular_likes']").attr('checked', false);
+					}
+				else{
+					$(":radio[name='radio_type'][value='latest_likes']").attr('checked', false);
+					}
+				})
+			// prev 버튼 누를때
+			$(document).on("click", ".prev", function(event){
+				var pageNum = $(this).attr('id');
+				pageNum *= 1;
+				pageNum = pageNum - 1;
+				var radio_val = $("input:radio[name='radio_type']:checked").val();
+				select_order_reply(radio_val, pageNum);
+				})
+			// next 버튼 누를 때
+			$(document).on("click", ".next", function(event){
+				var pageNum = $(this).attr('id');
+				pageNum *= 1;
+				pageNum = pageNum + 1;
+				var radio_val = $("input:radio[name='radio_type']:checked").val();
+				select_order_reply(radio_val, pageNum);
+				})
+			// 페이지 num 누를때
+			$(document).on("click", ".page", function(event){
+				var pageNum = $(this).text();
+				var radio_val = $("input:radio[name='radio_type']:checked").val();
+				select_order_reply(radio_val, pageNum);
+
+			})//페이징 function end
+
 			///최신순, 좋아요순
-			function select_order_reply(type){				
-				console.log(type);
-				var radio_val = type;
-				var allReviewCount = $("#allReviewNum").text();
-				allReviewCount *= 1;
+			function select_order_reply(type, start){
+				$(":radio[name='radio_type'][value='" + type + "']").attr('checked', true);
 				
 				var business_idx = $("input[name='business_idx']").val();
 				var user_idx = $("input[name='user_idx']").val();
-
+				console.log("start >> " + start);
+				
 				var html = '';
 				
-	            if(allReviewCount == 0){
-		            html = "<div id='newRecordImg'><img src='resources/img/newRecord2.jpg' style='width: 60%; margin-left: 20%; /></div>"
-					$('div .reviewSection').append(html);
-		        }	// review가 0일 경우
-				
-
 				$.ajax({
 		            url:"orderReply",
 		            type:"post",
 		            cache:false,
 		            dataType:'json',
 		            data : {
-		                "radio_val":radio_val,	// 버튼의 value값에 따라 작동
+		                "radio_val": type,	// 버튼의 value값에 따라 작동
 		                "business_idx": business_idx,
 		                "user_idx": user_idx,
+		                "startNum": start
+		                
 		            	},
 		            success:function(result){
-		            	$.each(result, function(idx, data) {
-							for(var t = 0; t <= idx; t++){
+		            	$.each(result, function(idx, review) {
+		            		if(result.allReviewCount > 0){
+		    		            $('#newRecordImg').hide();
+		    		        }
+			            	
+			            	$.each(review, function(review_idx, data){
+			            	
+							for(var t = 0; t <= review_idx; t++){
 								html = "<input type='hidden' name='idx' value='" + data.idx +"' />"
 									+ "<input type='hidden' name='review_user[" + data.idx + "]' value='" + data.user_idx + "' />"							
 									+ "<div class='tableDiv' id='" + t + "'>"
@@ -365,41 +412,68 @@ a.likesBtn:hover {
 									}
 			                    html += "</span></td></tr>"
 				                
-				                html += "<tr><td colspan='2'></td><td style='text-align: center;'>";
+				                html += "<tr><td colspan='2'></td><td style='text-align: right; padding-right: 10px;'>";
 				                if(data.likes == 1){
 			                    	html += "<b style='margin-right:10px;' id='reviewCount[" + data.idx + "]'>" + data.total_likes + "</b>"
 			                    		+ "<a href='javascript:void(0);' id=" + data.idx
-										+ " style='color: #db2d21; text-align: left;' class='likesBtn done'>♥</a>"
-										+ "<span style='color: gray; margin-left: 10px; width: 25%;'>도움이 됐어요!</span>"
+										+ " style='color: #db2d21; text-align: right;' class='likesBtn done'>♥</a>"
+										+ "<span style='color: gray; text-align: right; margin-left: 10px; width: 25%;'>도움이 됐어요!</span>"
 										+ "<input type='hidden' name='likes[" + data.idx + "]' id='likesValue' value=" + data.likes + " />";
 					                }else if(data.likes == 0){
 					                	html += "<b style='margin-right:10px;' id='reviewCount[" + data.idx + "]'>" + data.total_likes + "</b>"
 					                	+ "<a href='javascript:void(0);' id=" + data.idx
-										+ " style='text-align: left;' class='likesBtn'>♥</a>"
-										+ "<span style='color: gray; margin-left: 10px; width: 25%;'>도움이 됐어요!</span>"
+										+ " style='text-align: right;' class='likesBtn'>♥</a>"
+										+ "<span style='color: gray; text-align: right; margin-left: 10px; width: 25%;'>도움이 됐어요!</span>"
 										+ "<input type='hidden' name='likes[" + data.idx + "]' id='likesValue' value=" + data.likes + " />";
 						            }
 				                html += "</td></tr></table><hr></div>";
+
 							}	// t for문 end	  						
 		                    $('div .reviewSection').append(html);
+			            	})	// review each
             			});	//each end
-		            
+	                    // 리뷰 페이징 구간
+	                    var pageBlock = '';
+	                    if((result.blockStart - 1) > 0){
+		                    pageBlock = "<li class='disabled' style='display: inline-block;'><a class='prev' id='"+result.blockStart+"' href='javascript:void(0);'><span>«</span></a></li>"
+		                    }
+	                    for(var page = result.blockStart; page <= result.blockEnd; page++){
+		                    if(page <= result.lastPageNum){
+			                    // 현재 페이지 (text-decoration 추가)
+			                    if(page == result.startNum){
+				                    pageBlock += "<li style='text-decoration:underline; display: inline-block;'><a class='page' id='"+page+"' href='javascript:void(0);'>" + page + "</a></li>"
+				                    $(' .disabled').append(pageBlock);
+				                    }
+			                    else{
+			                    // 그 외 페이지
+			                    	pageBlock += "<li id='"+page+"' style='display: inline-block;'><a class='page' id='"+page+"' href='javascript:void(0);'>" + page + "</a></li>"
+				                    $(' .disabled').append(pageBlock);
+				                    }
+		                    	}
+		                    }
+
+	                    if(result.blockEnd < result.lastPageNum){
+	            			pageBlock += "<li style='display: inline-block;'><a class='next' id='"+result.blockEnd+"'href='javascript:void(0);'><span>»</span></a></li>"
+		                    }
+	                    $('.pagination').append(pageBlock);
+
 		            }, error:function(e){
 		            	console.log('error');
 		            }//error
 		        })//ajax
 		        $('div .reviewSection').empty();
+		        $('.pagination').empty();
 			}	// select_order_reply end
 			
 			//좋아요
 		    //session으로 받아옴(현재 사용자)
 		    $(document).on("click", ".likesBtn", function(event){
 		    	var review_idx = $(this).attr("id");
-		    	console.log("이거 확인 >> " + review_idx)
+		    	//console.log("이거 확인 >> " + review_idx)
 				var user_idx = $("input[name='user_idx']").val();
 			    var business_idx = $("input[name='business_idx']").val();
 				var review_user_idx = $("input[name='review_user[" + review_idx + "]']").val();
-				console.log("리뷰의 user >> " + review_user_idx);
+				//console.log("리뷰의 user >> " + review_user_idx);
 
 			    // 타인의 댓글에만 좋아요 클릭 가능
 				if(user_idx != review_user_idx){
@@ -422,17 +496,16 @@ a.likesBtn:hover {
 			            type: "POST",
 			            data: likesData,
 			            async: false,
-			            success: function(likesData){
-				            console.log(likesData);
-				            console.log(likesData.value);
-				            console.log(likesData.review_rating);          
+			            success: function(likesData){        
 							// 내가 좋아요 누른 댓글
+							likesData.value *= 1;
+							console.log("value >> " + likesData.value);
 							if(likesData.value == 1){
-								$("a[id='likes[" + likesData.review_idx + "]']").css('color', '#db2d21');
+								$("a[id='" + likesData.review_idx + "']").css('color', '#db2d21');
 		                     	var review_rating = likesData.review_rating;
 		                     	$("b[id='reviewCount["+review_idx+"]']").text(review_rating);
-		                  	}else if(likesData.value == 0){	// 좋아요 누르지 않은 댓글
-		                     	$("a[id='likes[" + likesData.review_idx + "]']").css('color', 'gray');
+		                  	}else{	// 좋아요 누르지 않은 댓글
+		                     	$("a[id='" + likesData.review_idx + "']").css('color', 'gray');
 		                     	var review_rating = likesData.review_rating;
 		                     	$("b[id='reviewCount["+review_idx+"]']").text(review_rating);
 		                  	}
@@ -464,6 +537,10 @@ a.likesBtn:hover {
 				
 		</script>
 		</div><!-- reviewContainer end -->
+		<!-- 댓글 페이징 -->
+		<div class="paginationBlock" style="text-align: center;">
+			<ul class="pagination" style="margin-left: auto; margin-right: auto; display: inline-block;"></ul>
+		</div>
    		<!-- The Modal -->
 		<div id="myModal" class="modal_img">
 			<!-- The Close Button -->
