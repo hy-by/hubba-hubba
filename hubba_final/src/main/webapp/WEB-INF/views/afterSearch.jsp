@@ -137,7 +137,7 @@
 	crossorigin="anonymous">
 </script>
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d7d066210e1cf222ef85fb9ea1746bba"></script>
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오키값"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
 </head>

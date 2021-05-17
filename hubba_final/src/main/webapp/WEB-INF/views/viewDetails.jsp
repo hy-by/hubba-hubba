@@ -710,7 +710,7 @@ if ((String[])request.getAttribute("allImages")!=null){
 
 
 	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e33a2e114db527d4f3ddac5248bd0330"></script>
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오키값"></script>
 
 	<script>
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 

@@ -127,7 +127,7 @@
          <div id="map" style="width:75%;height:500px; float:left; margin-left:15%;"></div>
          &nbsp;
          <!-- 지도 -->
-         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e33a2e114db527d4f3ddac5248bd0330"></script>
+         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오키값"></script>
          
          <script>
             <%
