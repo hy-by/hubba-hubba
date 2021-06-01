@@ -8,7 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<spring:eval expression="@config.getProperty('GOOGLE_API_KEY')"></spring:eval>"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<spring:eval expression="@config.getProperty('GOOGLE_API_KEY')"></spring:eval>"></script> 
 <meta charset="UTF-8">
 <title></title>
 </head>

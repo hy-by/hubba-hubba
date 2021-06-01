@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="<c:url value="/resources/css/header2.css"/>" type="text/css"/>
 <link href="https://fonts.googleapis.com/css2?family=Courgette&family=Nanum+Gothic&display=swap" rel="stylesheet">
 <script src="<c:url value="/resources/js/header1.js"/>"></script>
-
 <script type="text/javascript">
 $(document).ready(function(e){
    $('#logout').click(function() {
